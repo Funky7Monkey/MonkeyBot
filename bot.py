@@ -4,7 +4,6 @@ import random
 import discord
 from settings import email,password,botname,owner,Allowed_Channels,Allowed_Channels_MB,prefix,voice_channel,opusloc
 from trivia import trivia
-#import cleverbot
 import datetime
 import time
 import asyncio
@@ -14,7 +13,6 @@ import json
 import importlib
 
 client = discord.Client()
-#cleverbot_client = cleverbot.Cleverbot()
 loop = asyncio.get_event_loop()
 try:
 	with open('save.json', 'r') as q:
@@ -97,8 +95,6 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-#	if message.author == client.user:
-#		return
 	if int(message.channel.id) not in Allowed_Channels:
 		return
 	for role in message.author.roles:
@@ -179,12 +175,6 @@ async def on_message(message):
 				send = send + randmem.name
 			await client.send_message(message.channel, send + '!')
 			slap = datetime.datetime.now()
-
-#		elif command == 'cb':
-#			print('Cleverbot: ' + message.author.name + ' said "' + arg + '"')
-#			responce = cleverbot_client.ask(arg)
-#			print('Cleverbot: Cleverbot responded with "' + responce + '"')
-#			await client.send_message(message.channel, '**Cleverbot:** ' + responce)
 
 #		--------------
 #		---MusicBot---
