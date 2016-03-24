@@ -2,7 +2,7 @@ import sys
 import re
 import random
 import discord
-from settings import email,password,botname,owner,Allowed_Channels,Allowed_Channels_MB,prefix,voice_channel
+from settings import email,password,botname,owner,Allowed_Channels,Allowed_Channels_MB,prefix,voice_channel,opusloc
 from trivia import trivia
 #import cleverbot
 import datetime
@@ -83,7 +83,7 @@ async def on_ready():
 	print('Logged in as ' + client.user.name)
 	print('User ID: ' + client.user.id)
 	print('------')
-	discord.opus.load_opus('C:\Program Files (x86)\Python35-32\opusfile-0.7-win32\libopus-0')
+	discord.opus.load_opus(opusloc)
 	global voice
 	voice = await client.join_voice_channel(client.get_channel(voice_channel))
 	global queue
