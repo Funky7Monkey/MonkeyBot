@@ -246,31 +246,27 @@ async def on_message(message):
 					for i in range(3):
 						mes += '\n*"' + queue[i][1] + '"* - ' + queue[i][2] +'\n'
 			await client.send_message(message.channel, mes)
-#		elif command == 'queue':
-#			if not player.is_playing():
-#				await client.send_message(message.channel, 'Nothing playing.')
-#			elapsed = datetime.datetime.now() - Skip.started
-#			Tleft = player.duration - elapsed.total_seconds()
-#			mm, ss = divmod(Tleft, 60)
-#			if mm >= 60:
-#				hh, mm = divmod(mm, 60)
-#				left = '(%d:%02d:%02d left)' % (hh, mm, ss)
-#			else:
-#				left = '(%d:%02d left)' % (mm, ss)
-#			m, s = divmod(player.duration, 60)
-#			if m >= 60:
-#				h, m = divmod(m, 60)
-#				t = '(%d:%02d:%02d)' % (h, m, s)
-#			else:
-#				t = '(%d:%02d)' % (m, s)
-#			mes = 'Playing *"' + player.title + '"* - ' + t + ' ' + left
-#			need = (((len(client.get_channel(voice_channel).voice_members)-1) // 2) + 1 - Skip.skip)
-#			mes += '\n Skip votes: ' + str(Skip.skip) + ' More needed to skip: ' + str(need)
-#			if queue:
-#				mes += '\n\n __**Queue**__'
-#				for i in queue:
-#					mes += '\n*"' + i[1] + '"* - ' + i[2] +'\n'
-#			await client.send_message(message.author, mes)
+		elif command == 'queue':
+			if int(message.channel.id) not in Allowed_Channels_MB:
+				return
+			if not player.is_playing():
+				await client.send_message(message.author, 'Nothing playing.')
+				return
+			m, s = divmod((Skip.current[4] - int((datetime.datetime.now() - Skip.started).total_seconds())), 60)
+			if m >= 60:
+				h, m = divmod(m, 60)
+				left = '(%d:%02d:%02d left)' % (h, m, s)
+			else:
+				left = '(%d:%02d left)' % (m, s)
+			mes = 'Playing *"' + Skip.current[1] + '"* - ' + Skip.current[2] + ' ' + left
+			need = (((len(client.get_channel(voice_channel).voice_members)-1) // 2) + 1 - Skip.skip)
+			mes += '\n Skip votes: ' + str(Skip.skip) + ' More needed to skip: ' + str(need)
+			if queue:
+				mes += '\n\n __**Queue**__'
+				mes += ' Total songs in queue: ' + str(len(queue))
+				for i in range(3):
+					mes += '\n*"' + queue[i][1] + '"* - ' + queue[i][2] +'\n'
+			await client.send_message(message.author, mes)
 		elif command == 'skip':
 			if arg == 'admin' and int(message.author.id) in owner:
 				await client.send_message(message.channel, message.author.mention + ' admin skipped *"' + Skip.current[1] + '"*')
