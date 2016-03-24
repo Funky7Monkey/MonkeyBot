@@ -2,6 +2,7 @@ import sys
 import random
 from os import system
 from settings import Allowed_Channels_MB,botname
+import discord
 
 class trivia:
 	def __init__(self, bServer, bChannel, client):

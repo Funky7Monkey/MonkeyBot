@@ -206,10 +206,10 @@ async def on_message(message):
 				return
 			title = info.get('title')
 			duration = info.get('duration')
-			if 'url' not in info:
+			try:
 				url = info.get('requested_formats')[1].get('url')
-			else:
-				url = requested_formats['url']
+			except TypeError:
+				url = info['url']
 			m, s = divmod(duration, 60)
 			if m >= 60:
 				h, m = divmod(m, 60)
