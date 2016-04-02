@@ -38,6 +38,7 @@ async def music_queue():
 			if player.is_done():
 				Skip.current = []
 			if queue and player.is_done():
+				await asyncio.sleep(5)
 				print('starting not first')
 				Skip.current = queue[0]
 				song = Skip.current[0]
@@ -69,7 +70,7 @@ async def music_queue():
 				except IndexError as e:
 					print('IndexError: ' + str(e))
 					pass
-				player = client.voice.create_ffmpeg_player(url, options=opt, optBefore=before)
+				player = client.voice.create_ffmpeg_player(url, options=opt, before_options=before)
 				await client.send_message(client.get_channel('144963553475035137'), 'Now playing: *"' + title + '"* - ' + t)
 				player.start()
 				Skip.started = datetime.datetime.now()
@@ -77,7 +78,7 @@ async def music_queue():
 
 @client.event
 async def on_ready():
-	client.edit_profile(password, username = botname)
+	await client.edit_profile(password, username = botname)
 	print('Logged in as ' + client.user.name)
 	print('User ID: ' + client.user.id)
 	print('------')
@@ -189,35 +190,57 @@ async def on_message(message):
 				await client.send_message(message.channel, 'You must be in the Music voice channel to call `{}play`.'.format(prefix))
 				return
 			try:
-				if arg == Skip.current[0]:
-					await client.send_message(message.channel, '*"' + Skip.current[1] + '"* is already playing.')
-					return
-			except IndexError:
-				pass
-			for l in queue:
-				if l[0] == arg:
-					await client.send_message(message.channel, '*"' + l[1] + '"* is already in queue.')
-					return
-			try:
 				func = functools.partial(youtube_dl.YoutubeDL({'ignoreerrors':True, 'noplaylist':True}).extract_info, arg, download=False)
 				info = await client.voice.loop.run_in_executor(None, func)
 			except youtube_dl.utils.DownloadError:
 				await client.send_message(message.channel, 'That is not a valid source.')
 				return
-			title = info.get('title')
-			duration = info.get('duration')
-			try:
-				url = info.get('requested_formats')[1].get('url')
-			except TypeError:
-				url = info['url']
-			m, s = divmod(duration, 60)
-			if m >= 60:
-				h, m = divmod(m, 60)
-				t = '%d:%02d:%02d' % (h, m, s)
+			if 'entries' in info:
+				random.shuffle(info['entries'])
+				for video in info['entries']:
+					title = video.get('title')
+					duration = video.get('duration')
+					webpage = video.get('webpage_url')
+					try:
+						url = video.get('requested_formats')[1].get('url')
+					except TypeError:
+						url = video['url']
+					try:
+						if webpage == Skip.current[0]:
+							await client.send_message(message.channel, '*"' + Skip.current[1] + '"* is already playing.')
+							return
+					except IndexError:
+						pass
+					m, s = divmod(duration, 60)
+					if m >= 60:
+						h, m = divmod(m, 60)
+						t = '%d:%02d:%02d' % (h, m, s)
+					else:
+						t = '%d:%02d' % (m, s)
+					await client.send_message(message.channel, message.author.mention + ' added *"' + title + '"* - ' + t + ' to queue.')
+					queue.append([webpage, title, t, url, duration])
 			else:
-				t = '%d:%02d' % (m, s)
-			await client.send_message(message.channel, message.author.mention + ' added *"' + title + '"* - ' + t + ' to queue.')
-			queue.append([arg, title, t, url, duration])
+				title = info.get('title')
+				duration = info.get('duration')
+				webpage = info.get('webpage_url')
+				try:
+					url = info.get('requested_formats')[1].get('url')
+				except TypeError:
+					url = info['url']
+				try:
+					if webpage == Skip.current[0]:
+						await client.send_message(message.channel, '*"' + Skip.current[1] + '"* is already playing.')
+						return
+				except IndexError:
+					pass
+				m, s = divmod(duration, 60)
+				if m >= 60:
+					h, m = divmod(m, 60)
+					t = '%d:%02d:%02d' % (h, m, s)
+				else:
+					t = '%d:%02d' % (m, s)
+				await client.send_message(message.channel, message.author.mention + ' added *"' + title + '"* - ' + t + ' to queue.')
+				queue.append([webpage, title, t, url, duration])
 		elif command == 'status':
 			if int(message.channel.id) not in Allowed_Channels_MB:
 				return
@@ -264,8 +287,8 @@ async def on_message(message):
 			if queue:
 				mes += '\n\n __**Queue**__'
 				mes += ' Total songs in queue: ' + str(len(queue))
-				for i in range(3):
-					mes += '\n*"' + queue[i][1] + '"* - ' + queue[i][2] +'\n'
+				for song in queue:
+					mes += '\n*"' + song[1] + '"* - ' + song[2] +'\n'
 			await client.send_message(message.author, mes)
 		elif command == 'skip':
 			if arg == 'admin' and int(message.author.id) in owner:
