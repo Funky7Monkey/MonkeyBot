@@ -39,7 +39,7 @@ async def music_queue():
 				Skip.current = []
 			if queue and player.is_done():
 				await asyncio.sleep(5)
-				print('starting not first')
+				print('starting')
 				Skip.current = queue[0]
 				song = Skip.current[0]
 				url = Skip.current[3]
@@ -55,7 +55,7 @@ async def music_queue():
 				Skip.attemped = []
 		except NameError:
 			if queue:
-				print('starting first')
+				print('starting')
 				Skip.current = queue[0]
 				song = Skip.current[0]
 				url = Skip.current[3]
@@ -68,7 +68,7 @@ async def music_queue():
 					opt += ' -ss ' + str(Skip.current[5])
 					Skip.current.pop(5)
 				except IndexError as e:
-					print('IndexError: ' + str(e))
+					print(str(datetime.datetime.now()) + ': IndexError: ' + str(e))
 					pass
 				player = client.voice.create_ffmpeg_player(url, options=opt, before_options=before)
 				await client.send_message(client.get_channel('144963553475035137'), 'Now playing: *"' + title + '"* - ' + t)
@@ -79,9 +79,7 @@ async def music_queue():
 @client.event
 async def on_ready():
 	await client.edit_profile(password, username = botname)
-	print('Logged in as ' + client.user.name)
-	print('User ID: ' + client.user.id)
-	print('------')
+	print(str(datetime.datetime.now()) + '\nLogged in as ' + client.user.name + '\nUser ID: ' + client.user.id + '\n------')
 	discord.opus.load_opus(opusloc)
 	global voice
 	voice = await client.join_voice_channel(client.get_channel(voice_channel))
@@ -104,7 +102,7 @@ async def on_message(message):
 	if not message.content.startswith(prefix):
 		return
 	try:
-		print('gotten')
+		print(str(datetime.datetime.now()) + ': received')
 		try:
 			command, arg = message.content[1:].split(' ', maxsplit = 1)
 			command = command.lower()
@@ -145,10 +143,10 @@ async def on_message(message):
 		elif command == 'playing':
 			if not arg:
 				await client.change_status(game = discord.Game(name = None))
-				print('Set status to None')
+				print(str(datetime.datetime.now()) + ': Set status to None')
 			else:
 				await client.change_status(game = discord.Game(name = arg))
-				print('Set status to {}'.format(arg))
+				print(str(datetime.datetime.now()) + ': Set status to {}'.format(arg))
 		elif command == 'slap':
 			global slap
 			try:
@@ -317,7 +315,7 @@ async def on_message(message):
 				await client.send_message(message.channel, 'Unable to skip *"' + Skip.current[1] + '."* Not enough votes. Need ' + str(need) + ' more vote' + s)
 
 		else:
-			print('**Error:** Not a valid command')
+			print(str(datetime.datetime.now()) + ': **Error:** Not a valid command')
 	except Exception as e:
 		import traceback
 		tb = traceback.format_exc()
@@ -326,17 +324,24 @@ async def on_message(message):
 			await client.send_message(o, 'Something went wrong.\n```' + tb + '```')
 		raise
 
+@client.event
+async def on_member_ban(member):
+	await client.send_message(member.server.default_channel, '{} got the boot. :boot:'.format(member.name))
+	await client.send_message(member, 'You got the boot from {}. :boot:'.format(member.server.name))
+
+@client.event
+
 try:
 	client.run(email,password)
 except discord.errors.ClientException as e:
-	print('ClientException')
+	print(str(datetime.datetime.now()) + ': ClientException')
 	print(e)
 	pass
 except RuntimeError as e:
-	print('RuntimeError')
+	print(str(datetime.datetime.now()) + ': RuntimeError')
 	print(e)
 	pass
 except OSError as e:
-	print('OSError')
+	print(str(datetime.datetime.now()) + ': OSError')
 	print(e)
 	pass
