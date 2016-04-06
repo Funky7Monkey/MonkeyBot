@@ -347,5 +347,3 @@ except discord.errors.ClientException as e:
 	print(str(datetime.datetime.now()) + ': ClientException')
 	print(e)
 	pass
-finally:
-	return False
