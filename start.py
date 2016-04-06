@@ -8,4 +8,4 @@ while True:
 		line = p.readline()
 		if not line: break
 		print(line)
-	sleep(10)
+	sleep(1)
