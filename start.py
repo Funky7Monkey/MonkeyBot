@@ -1,7 +1,10 @@
-import subprocess as sub
 from time import sleep
+import os
 p = False
 while True:
-	if p == False:
-		p = sub.Popen(['sudo', 'python3.5', 'bot.py'],stdout=sub.PIPE,stderr=sub.PIPE)
-	sleep(60)
+	p = os.popen('sudo python3.5 bot.py',"r")
+	while 1:
+    	line = p.readline()
+    	if not line: break
+    	print(line)
+    sleep(10)

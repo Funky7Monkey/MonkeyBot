@@ -346,12 +346,12 @@ try:
 except discord.errors.ClientException as e:
 	print(str(datetime.datetime.now()) + ': ClientException')
 	print(e)
-	return False
+	pass
 except RuntimeError as e:
 	print(str(datetime.datetime.now()) + ': RuntimeError')
 	print(e)
-	return False
+	pass
 except OSError as e:
 	print(str(datetime.datetime.now()) + ': OSError')
 	print(e)
-	return False
+	pass
