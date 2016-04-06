@@ -330,6 +330,8 @@ async def on_member_ban(member):
 	await client.send_message(member, 'You got the boot from {}. :boot:'.format(member.server.name))
 
 @client.event
+async def on_member_unban(server, user):
+	await client.send_message(server.default_channel, '{} unbooted'.format(user.name))
 
 try:
 	client.run(email,password)
