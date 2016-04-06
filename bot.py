@@ -11,6 +11,13 @@ import youtube_dl
 import functools
 import json
 import importlib
+import logging
+
+log = logging.getLogger('discord')
+log.setLevel(logging.INFO)
+handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
+handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+log.addHandler(handler)
 
 client = discord.Client()
 loop = asyncio.get_event_loop()
@@ -39,7 +46,7 @@ async def music_queue():
 				Skip.current = []
 			if queue and player.is_done():
 				await asyncio.sleep(5)
-				print('starting')
+				log.info('Starting song')
 				Skip.current = queue[0]
 				song = Skip.current[0]
 				url = Skip.current[3]
@@ -55,7 +62,7 @@ async def music_queue():
 				Skip.attemped = []
 		except NameError:
 			if queue:
-				print('starting')
+				log.info('Starting song')
 				Skip.current = queue[0]
 				song = Skip.current[0]
 				url = Skip.current[3]
@@ -109,6 +116,7 @@ async def on_message(message):
 		except(ValueError):
 			command = message.content[1:]
 			arg = None
+		log.info('Received command: "{}" with argument: "{}" from "{}"'.format(command, arg, message.author.name))
 
 		if command == 'help':
 			if not arg:
@@ -338,12 +346,12 @@ try:
 except discord.errors.ClientException as e:
 	print(str(datetime.datetime.now()) + ': ClientException')
 	print(e)
-	pass
+	return False
 except RuntimeError as e:
 	print(str(datetime.datetime.now()) + ': RuntimeError')
 	print(e)
-	pass
+	return False
 except OSError as e:
 	print(str(datetime.datetime.now()) + ': OSError')
 	print(e)
-	pass
+	return False
