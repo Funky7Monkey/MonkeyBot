@@ -154,7 +154,7 @@ async def on_message(message):
 				update = ['sudo','git','clone','https://github.com/Funky7Monkey/MonkeyBot']
 				copy = ['sudo','cp','~/Discord/MonkeyBot/*.*','~/Discord']
 				remove = ['sudo','rm','-r','MonkeyBot']
-				up = subprocess.Popen(update,stdout=sub.PIPE,stderr=sub.PIPE)
+				up = subprocess.Popen(update,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
 				up.wait()
 				subprocess.Popen(copy)
 				subprocess.Popen(remove)
