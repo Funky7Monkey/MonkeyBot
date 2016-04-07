@@ -154,7 +154,7 @@ async def on_message(message):
 				update = ['sudo','git','clone','https://github.com/Funky7Monkey/MonkeyBot',
 					'&&','sudo','cp','~/Discord/MonkeyBot/*.*','~/Discord',
 					'&&','sudo','rm','-r','MonkeyBot']
-				subprocess.Popen(update)
+				update = subprocess.Popen(update)
 				out, error = update.communicate()
 				for o in owners:
 					await client.send_message(o, str(out)+'\n\nError:'+str(error))
