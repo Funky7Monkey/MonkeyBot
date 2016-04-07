@@ -3,7 +3,7 @@ import subprocess as sub
 bot = ['sudo','python3.5','bot.py']
 update = ['sudo','git','clone','https://github.com/Funky7Monkey/MonkeyBot']
 copy = ['sudo','cp','~/Discord/MonkeyBot/*.*','~/Discord']
-remove = [,'sudo','rm','-r','MonkeyBot']
+remove = ['sudo','rm','-r','MonkeyBot']
 subprocess.Popen(update)
 subprocess.Popen(copy)
 subprocess.Popen(remove)

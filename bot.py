@@ -151,17 +151,13 @@ async def on_message(message):
 					await client.close()
 		elif command == 'update':
 			if int(message.author.id) in owner or message.author.id == client.user.id:
-				update = ['sudo','git','clone','https://github.com/Funky7Monkey/MonkeyBot',
-					'&&','sudo','cp','~/Discord/MonkeyBot/*.*','~/Discord',
-					'&&','sudo','rm','-r','MonkeyBot']
-				update = subprocess.Popen(update)
-				out, error = update.communicate()
-				for o in owners:
-					await client.send_message(o, str(out)+'\n\nError:'+str(error))
-				if error == None:
-					await client.send_message(message.channel, 'Update was a success!')
-				if error != None:
-					await client.send_message(message.channel, 'Update failed')
+				update = ['sudo','git','clone','https://github.com/Funky7Monkey/MonkeyBot']
+				copy = ['sudo','cp','~/Discord/MonkeyBot/*.*','~/Discord']
+				remove = ['sudo','rm','-r','MonkeyBot']
+				subprocess.Popen(update)
+				subprocess.Popen(copy)
+				subprocess.Popen(remove)
+				await client.send_message(message.channel, 'Update was a success!')
 		elif command == 'playing':
 			if not arg:
 				await client.change_status(game = discord.Game(name = None))
