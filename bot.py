@@ -156,7 +156,8 @@ async def on_message(message):
 				remove = ['sudo','rm','-r','MonkeyBot']
 				up = subprocess.Popen(update,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
 				up.wait()
-				subprocess.Popen(copy)
+				cp = subprocess.Popen(copy)
+				cp.wait()
 				subprocess.Popen(remove)
 				await client.send_message(message.channel, 'Update was successful!')
 		elif command == 'playing':

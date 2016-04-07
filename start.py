@@ -6,7 +6,8 @@ copy = ['sudo','cp','~/Discord/MonkeyBot/*.*','~/Discord']
 remove = ['sudo','rm','-r','MonkeyBot']
 up = sub.Popen(update,stdout=sub.PIPE,stderr=sub.PIPE)
 up.wait()
-sub.Popen(copy)
+cp = sub.Popen(copy)
+cp.wait()
 sub.Popen(remove)
 p = sub.Popen(bot,stdout=sub.PIPE,stderr=sub.PIPE)
 while True:
