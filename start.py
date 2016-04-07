@@ -1,14 +1,9 @@
 from time import sleep
 import subprocess as sub
+update = ['sudo','git','pull']
 bot = ['sudo','python3.5','bot.py']
-update = ['sudo','git','clone','https://github.com/Funky7Monkey/MonkeyBot']
-copy = ['sudo','cp','~/Discord/MonkeyBot/*','~/Discord']
-remove = ['sudo','rm','-r','MonkeyBot']
 up = sub.Popen(update,stdout=sub.PIPE,stderr=sub.PIPE)
 up.wait()
-cp = sub.Popen(copy)
-cp.wait()
-sub.Popen(remove)
 p = sub.Popen(bot,stdout=sub.PIPE,stderr=sub.PIPE)
 while True:
 	if p.returncode == None:
