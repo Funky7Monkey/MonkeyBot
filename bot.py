@@ -159,7 +159,7 @@ async def on_message(message):
 					pass
 				subprocess.Popen(copy)
 				subprocess.Popen(remove)
-				await client.send_message(message.channel, 'Update was a success!')
+				await client.send_message(message.channel, 'Update was successful!')
 		elif command == 'playing':
 			if not arg:
 				await client.change_status(game = discord.Game(name = None))
