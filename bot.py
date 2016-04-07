@@ -182,6 +182,8 @@ async def on_message(message):
 				send = send + randmem.name
 			await client.send_message(message.channel, send + '!')
 			slap = datetime.datetime.now()
+		elif command == 'milkshake':
+			await client.send_message(message.channel, 'https://www.youtube.com/watch?v=pGL2rytTraA')
 
 #		--------------
 #		---MusicBot---
