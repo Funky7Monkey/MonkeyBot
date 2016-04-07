@@ -12,6 +12,7 @@ import functools
 import json
 import importlib
 import logging
+import subprocess
 
 log = logging.getLogger('discord')
 log.setLevel(logging.INFO)
@@ -148,6 +149,15 @@ async def on_message(message):
 					await client.send_message(message.channel, 'Something went wrong.\nClosing...')
 				finally:
 					await client.close()
+		elif command == 'update':
+			if int(message.author.id) in owner or message.author.id == client.user.id:
+				update = ['sudo','git','clone','https://github.com/Funky7Monkey/MonkeyBot',
+					'&&','sudo','cp','~/Discord/MonkeyBot/*.*','~/Discord',
+					'&&','sudo','rm','-r','MonkeyBot']
+				subprocess.Popen(update)
+				out, error = update.communicate()
+				for o in owners:
+					await client.send_message(o, str(out)+'\n\nError:'+str(error))
 		elif command == 'playing':
 			if not arg:
 				await client.change_status(game = discord.Game(name = None))
