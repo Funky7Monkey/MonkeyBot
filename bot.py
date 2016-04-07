@@ -155,8 +155,7 @@ async def on_message(message):
 				copy = ['sudo','cp','~/Discord/MonkeyBot/*.*','~/Discord']
 				remove = ['sudo','rm','-r','MonkeyBot']
 				up = subprocess.Popen(update,stdout=sub.PIPE,stderr=sub.PIPE)
-				while up.returncode == None:
-					pass
+				up.wait()
 				subprocess.Popen(copy)
 				subprocess.Popen(remove)
 				await client.send_message(message.channel, 'Update was successful!')

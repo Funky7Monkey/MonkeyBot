@@ -5,8 +5,7 @@ update = ['sudo','git','clone','https://github.com/Funky7Monkey/MonkeyBot']
 copy = ['sudo','cp','~/Discord/MonkeyBot/*.*','~/Discord']
 remove = ['sudo','rm','-r','MonkeyBot']
 up = sub.Popen(update,stdout=sub.PIPE,stderr=sub.PIPE)
-while up.returncode == None:
-	pass
+up.wait()
 sub.Popen(copy)
 sub.Popen(remove)
 p = sub.Popen(bot,stdout=sub.PIPE,stderr=sub.PIPE)
