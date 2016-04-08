@@ -153,8 +153,8 @@ async def on_message(message):
 			if int(message.author.id) in owner or message.author.id == client.user.id:
 				update = ['sudo','git','pull']
 				up = subprocess.Popen(update,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
-				up.wait()
 				out, err = up.communicate()
+				up.wait()
 				await client.send_message(message.channel, 'Update succeeded!')
 				for o in owners:
 					await client.send_message(o, str(out))
