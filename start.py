@@ -7,8 +7,6 @@ up.wait()
 p = sub.Popen(bot,stdout=sub.PIPE,stderr=sub.PIPE)
 while True:
 	if p.returncode == None:
-		out, error = p.communicate()
-		print(out)
-		print(error)
+		print(p.stdout.readline())
 	elif p.returncode != None:
 		p = sub.Popen(bot,stdout=sub.PIPE,stderr=sub.PIPE)
