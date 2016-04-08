@@ -163,10 +163,10 @@ async def on_message(message):
 		elif command == 'playing':
 			if not arg:
 				await client.change_status(game = discord.Game(name = None))
-				print(str(datetime.datetime.now()) + ': ' + message.author.name ' set status to None')
+				print(str(datetime.datetime.now()) + ': ' + message.author.name + ' set status to None')
 			else:
 				await client.change_status(game = discord.Game(name = arg))
-				print(str(datetime.datetime.now()) + ': ' + message.author.name ' set status to {}'.format(arg))
+				print(str(datetime.datetime.now()) + ': ' + message.author.name + ' set status to {}'.format(arg))
 		elif command == 'slap':
 			global slap
 			try:
