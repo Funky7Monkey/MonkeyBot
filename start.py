@@ -1,7 +1,7 @@
 from time import sleep
 import subprocess as sub
-update = ['sudo','git','pull']
-bot = ['sudo','python3.5','bot.py']
+update = ['sudo','nohup','git','pull']
+bot = ['sudo','nohup','python3.5','bot.py']
 up = sub.Popen(update)
 up.wait()
 p = sub.Popen(bot,universal_newlines=True)
