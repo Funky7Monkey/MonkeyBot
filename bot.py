@@ -155,7 +155,7 @@ async def on_message(message):
 				up = subprocess.Popen(update,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
 				mes = []
 				while up.returncode == None:
-					mes.append(p.stdout.readline())
+					mes.append(up.stdout.readline())
 				await client.send_message(message.channel, 'Update succeeded!')
 				for o in owners:
 					await client.send_message(o, '\n'.join(mes))
