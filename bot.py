@@ -128,7 +128,7 @@ async def on_message(message):
 					\n__**MusicBot**__\n`{1}play` - Play audio from a YouTube video or a number of other sources.\
 					\n`{1}status` - Get the current track and any tracks in queue.\
 					\n`{1}skip` - Vote to skip current track. Requires at least half of the members in the Music channel to succeed.\
-					\n__**CleverBot**__ *Not currently functioning*'.format(botname, prefix))
+					\nWhen calling commands in PM, do not use the prefix `{1}`'.format(botname, prefix))
 		elif command == 'join':
 			if message.author.id in owner or message.author.id == client.user.id:
 				if not arg:
