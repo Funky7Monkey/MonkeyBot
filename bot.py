@@ -102,13 +102,14 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-	if int(message.channel.id) not in Allowed_Channels and message.channel.is_private == False:
+	if message.author == client.user:
 		return
-	for role in message.author.roles:
-		if role.name == 'Bot':
+	if message.channel.is_private == False:
+		if int(message.channel.id) not in Allowed_Channels or not message.content.startswith(prefix):
 			return
-	if not message.content.startswith(prefix) and message.channel.is_private == False:
-		return
+		for role in message.author.roles:
+			if role.name == 'Bot':
+				return
 	try:
 		print(str(datetime.datetime.now()) + ': received')
 		try:
