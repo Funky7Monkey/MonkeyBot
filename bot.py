@@ -348,12 +348,17 @@ async def on_message(message):
 
 @client.event
 async def on_member_ban(member):
+	await client.send_message(member.server.default_channel, 'The banhammer fell on {}. :hammer:'.format(member.name))
+	await client.send_message(member, 'The banhammer fell on you in {}. :hammer:'.format(member.server.name))
+
+@client.event
+async def on_member_kick(member):
 	await client.send_message(member.server.default_channel, '{} got the boot. :boot:'.format(member.name))
-	await client.send_message(member, 'You got the boot from {}. :boot:'.format(member.server.name))
+	await client.send_message(member, 'You got booted from {}. :boot:'.format(member.server.name))
 
 @client.event
 async def on_member_unban(server, user):
-	await client.send_message(server.default_channel, '{} unbooted'.format(user.name))
+	await client.send_message(server.default_channel, '{} got unhammered'.format(user.name))
 
 try:
 	client.run(email,password)
