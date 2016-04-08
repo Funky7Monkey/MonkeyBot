@@ -152,7 +152,7 @@ async def on_message(message):
 		elif command == 'update':
 			if int(message.author.id) in owner or message.author.id == client.user.id:
 				update = ['sudo','git','pull']
-				up = subprocess.Popen(update,stdout=subprocess.PIPE,stderr=subprocess.PIPE)
+				up = subprocess.Popen(update,stdout=subprocess.PIPE,stderr=subprocess.PIPE,universal_newlines=True)
 				mes = []
 				while up.returncode == None:
 					mes.append(up.stdout.readline())
