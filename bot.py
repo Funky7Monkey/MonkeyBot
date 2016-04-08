@@ -153,12 +153,12 @@ async def on_message(message):
 			if int(message.author.id) in owner or message.author.id == client.user.id:
 				update = ['sudo','git','pull']
 				up = subprocess.Popen(update,stdout=subprocess.PIPE,stderr=subprocess.PIPE,universal_newlines=True)
-				mes = []
-				while up.returncode == None:
-					mes.append(up.stdout.readline())
+				out, err = up.communicate()
+				up.wait()
 				await client.send_message(message.channel, 'Update succeeded!')
 				for o in owners:
-					await client.send_message(o, '\n'.join(mes))
+					await client.send_message(o, str(out))
+					await client.send_message(o, str(err))
 		elif command == 'playing':
 			if not arg:
 				await client.change_status(game = discord.Game(name = None))
