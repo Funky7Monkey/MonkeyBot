@@ -157,10 +157,7 @@ async def on_message(message):
 				up.wait()
 				await client.send_message(message.channel, 'Update succeeded!')
 				for o in owners:
-					if out == "Already up-to-date.":
-						await client.send_message(o, 'Output:\n'+out)
-					else:
-						await client.send_message(o, 'Output:\n'+out+'\nErrors:\n'+err)
+					await client.send_message(o, 'Output:\n'+up.communicate()[0])
 		elif command == 'playing':
 			if not arg:
 				await client.change_status(game = discord.Game(name = None))
