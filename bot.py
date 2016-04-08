@@ -107,16 +107,17 @@ async def on_message(message):
 	if message.channel.is_private == False:
 		if int(message.channel.id) not in Allowed_Channels or not message.content.startswith(prefix):
 			return
+		message.content = message.content[1:]
 		for role in message.author.roles:
 			if role.name == 'Bot':
 				return
 	try:
 		print(str(datetime.datetime.now()) + ': received')
 		try:
-			command, arg = message.content[1:].split(' ', maxsplit = 1)
+			command, arg = message.content.split(' ', maxsplit = 1)
 			command = command.lower()
 		except(ValueError):
-			command = message.content[1:]
+			command = message.content
 			arg = None
 		log.info('Received command: "{}" with argument: "{}" from "{}"'.format(command, arg, message.author.name))
 
@@ -203,7 +204,7 @@ async def on_message(message):
 #			Supported sources: https://github.com/rg3/youtube-dl/tree/master/youtube_dl/extractor
 
 		elif command == 'play':
-			if int(message.channel.id) not in Allowed_Channels_MB:
+			if int(message.channel.id) not in Allowed_Channels_MB or message.channel.is_private == True:
 				return
 			if message.author not in client.get_channel(voice_channel).voice_members and int(message.author.id) not in owner:
 				await client.send_message(message.channel, 'You must be in the Music voice channel to call `{}play`.'.format(prefix))
@@ -314,7 +315,7 @@ async def on_message(message):
 				await client.send_message(message.channel, message.author.mention + ' admin skipped *"' + Skip.current[1] + '"*')
 				player.stop()
 				return
-			if int(message.channel.id) not in Allowed_Channels_MB:
+			if int(message.channel.id) not in Allowed_Channels_MB or message.channel.is_private == True:
 				return
 			if message.author not in client.get_channel(voice_channel).voice_members:
 				await client.send_message(message.channel, 'You must be in the Music voice channel to call `{}skip`.'.format(prefix))
