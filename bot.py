@@ -3,7 +3,6 @@ import re
 import random
 import discord
 from settings import email,password,botname,owner,Allowed_Channels,Allowed_Channels_MB,prefix,voice_channel,opusloc
-from trivia import trivia
 import datetime
 import time
 import asyncio
