@@ -195,6 +195,11 @@ async def on_message(message):
 			slap = datetime.datetime.now()
 		elif command == 'milkshake':
 			await client.send_message(message.channel, 'https://www.youtube.com/watch?v=pGL2rytTraA')
+		elif command == 'juice':
+			await sent = client.send_message(message.server.default_channel, 'j')
+			for l in 'uice':
+				await asyncio.sleep(1)
+				await client.edit_message(sent, sent.content + l)
 
 #		--------------
 #		---MusicBot---
