@@ -134,7 +134,7 @@ async def on_message(message):
 					await client.send_message(message.channel, 'Error no invite')
 				else:
 					await client.accept_invite(arg)
-		elif command == 'die':
+		elif command == 'restart' or command == 'kill':
 			if int(message.author.id) in owner or message.author.id == client.user.id:
 				try:
 					if player.is_playing():
@@ -149,6 +149,8 @@ async def on_message(message):
 						await client.send_message(o, 'Something went wrong.\n```' + tb + '```')
 					await client.send_message(message.channel, 'Something went wrong.\nClosing...')
 				finally:
+					if command == 'kill':
+						subprocess.Popen(['sudo','killall','-15','python3.5'])
 					await client.close()
 		elif command == 'update':
 			if int(message.author.id) in owner or message.author.id == client.user.id:
