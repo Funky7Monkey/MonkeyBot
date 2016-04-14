@@ -196,15 +196,15 @@ async def on_message(message):
 		elif command == 'milkshake':
 			await client.send_message(message.channel, 'https://www.youtube.com/watch?v=pGL2rytTraA')
 		elif command == 'juice':
-			await sent = client.send_message(message.server.default_channel, 'j')
+			sent = await client.send_message(message.server.default_channel, 'j')
 			await asyncio.sleep(1)
-			await client.edit_message(sent, 'ju')
+			sent = await client.edit_message(sent, 'ju')
 			await asyncio.sleep(1)
-			await client.edit_message(sent, 'jui')
+			sent = await client.edit_message(sent, 'jui')
 			await asyncio.sleep(1)
-			await client.edit_message(sent, 'juic')
+			sent = await client.edit_message(sent, 'juic')
 			await asyncio.sleep(1)
-			await client.edit_message(sent, 'juice')
+			sent = await client.edit_message(sent, 'juice')
 
 #		--------------
 #		---MusicBot---
