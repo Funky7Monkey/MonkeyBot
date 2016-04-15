@@ -200,7 +200,7 @@ async def on_message(message):
 		elif command == 'e':
 			if int(message.author.id) in owner:
 				sent = await client.send_message(message.server.default_channel, arg[0])
-				for i in (len(arg)-1)
+				for i in (len(arg)-1):
 					sent = await client.edit_message(sent, arg[i+1])
 					await asyncio.sleep(1)
 
