@@ -163,6 +163,15 @@ async def on_message(message):
 				await client.send_message(message.channel, 'Update succeeded!')
 				for o in owners:
 					await client.send_message(o, 'Output:\n'+out+'\n'+err)
+		elif command == 'add':
+			try:
+				sub, arg = arg.split(' ', maxsplit = 1)
+				sub = sub.lower()
+			except(ValueError):
+				await client.send_message(message.channel, 'Need Arguments')
+			if sub == 'compensation':
+				compensation.append(arg)
+				await client.send_message(message.channel, 'Added `{}`'.format(arg))
 		elif command == 'playing':
 			if not arg:
 				await client.change_status(game = discord.Game(name = None))
