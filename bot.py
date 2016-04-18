@@ -197,6 +197,11 @@ async def on_message(message):
 			slap = datetime.datetime.now()
 		elif command == 'milkshake':
 			await client.send_message(message.channel, 'https://www.youtube.com/watch?v=pGL2rytTraA')
+		elif command == 'compensation':
+			comp = ['https://hipiseverything.files.wordpress.com/2013/03/compensation.jpg','https://s-media-cache-ak0.pinimg.com/736x/13/82/03/138203eb61d3ba6faa09a1e44960413d.jpg',
+				'http://img.photobucket.com/albums/v394/xdoctor/l_1ed8c6e94411092f4b3e97f21a8bdb59.jpg','http://s2.quickmeme.com/img/e6/e61ac53e2e3cc669600d1161509d4f5456e33c65a57761ad3d4fc5d5c91c5c21.jpg',
+				'https://updatesfromthefield.files.wordpress.com/2010/10/windowslivewriter496747266b98-5752overcompensation-2.jpg','http://www.toptenz.net/wp-content/uploads/2010/10/big-truck-photo.jpeg']
+			await client.send_message(message.channel, random.choice(comp))
 		elif command == 'e' or command == 'i':
 			if int(message.author.id) in owner:
 				sent = await client.send_message(message.server.default_channel, arg[0])
