@@ -103,7 +103,7 @@ async def on_ready():
 async def on_message(message):
 	if message.author == client.user:
 		return
-	if message.content == '(╯°□°）╯︵ ┻━┻':
+	if '(╯°□°）╯︵ ┻━┻' in message.content:
 		await client.send_message(message.channel, '┬─┬﻿ ノ( ゜-゜ノ)')
 	if message.channel.is_private == False:
 		if int(message.channel.id) not in Allowed_Channels or not message.content.startswith(prefix):
