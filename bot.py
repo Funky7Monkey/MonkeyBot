@@ -108,7 +108,7 @@ async def on_ready():
 async def on_message(message):
 	if message.author == client.user:
 		return
-	if '(╯°□°）╯︵ ┻━┻' in message.content:
+	if '(╯°□°）╯︵ ┻━┻' in message.content or '(╯°□°)╯︵ ┻━┻' in message.content:
 		await client.send_message(message.channel, '┬─┬﻿ ノ( ゜-゜ノ)')
 	if message.channel.is_private == False:
 		if int(message.channel.id) not in Allowed_Channels or not message.content.startswith(prefix):
@@ -193,21 +193,15 @@ async def on_message(message):
 				pass
 			randmem = list(message.server.members)[(random.randrange(0, len(message.server.members)))]
 			send = message.author.mention + ' slapped '
-			if arg:
-				IDs = arg.replace('@', '').replace('<', '').replace('>', '').split()
-				for member in message.server.members:
-					if str(member.id) in IDs:
-						if member.id != client.user.id:
-							send = send + member.mention + ' and '
-						elif arg.replace('@', '').replace('<', '').replace('>', '') == client.user.id:
-							send = message.author.mention + ", don't you dare slap me     "
-							break
-				if arg.startswith('@everyone'):
-					send = message.author.mention + ", you can't slap *everyone,* dumbass     "
+			if '@everyone' in arg or '@here' in arg:
+				send = message.author.mention + ", you can't slap *everyone,* dumbass"
+			elif client.user in message.mentions:
+				send = message.author.mention + ", don't you dare slap me"
+			elif len(message.mentions) > 0:
+				for member in message.mentions:
+					send = send + member.mention + ' and '
 				send = send[:-5]
 			else:
-				send = send + randmem.name
-			if send == message.author.mention + ' slapped ':
 				send = send + randmem.name
 			await client.send_message(message.channel, send + '!')
 			slap = datetime.datetime.now()
