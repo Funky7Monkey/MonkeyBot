@@ -174,7 +174,7 @@ async def on_message(message):
 				for mes in client.messages:
 					if mes.author == client.user and mes.channel == message.channel:
 						own.append(mes)
-				own = own.reverse()
+				own.reverse()
 				for i in range(int(arg)):
 					await client.delete_message(own[i])
 		elif command == 'add':
