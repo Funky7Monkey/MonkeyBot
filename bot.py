@@ -168,6 +168,15 @@ async def on_message(message):
 				await client.send_message(message.channel, 'Update succeeded!')
 				for o in owners:
 					await client.send_message(o, 'Output:\n'+out+'\n'+err)
+		elif command == 'clean':
+			if int(message.author.id) in owner or message.author.id == client.user.id:
+				own = []
+				for mes in client.messages:
+					if mes.author == client.user and mes.channel == message.channel:
+						own.append(mes)
+				own = own.reverse()
+				for i in range(int(arg)):
+					await delete_message(own[i])
 		elif command == 'add':
 			try:
 				sub, arg = arg.split(' ', maxsplit = 1)
