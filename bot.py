@@ -176,7 +176,7 @@ async def on_message(message):
 						own.append(mes)
 				own = own.reverse()
 				for i in range(int(arg)):
-					await delete_message(own[i])
+					await client.delete_message(own[i])
 		elif command == 'add':
 			try:
 				sub, arg = arg.split(' ', maxsplit = 1)
