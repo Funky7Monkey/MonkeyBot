@@ -193,7 +193,9 @@ async def on_message(message):
 				pass
 			randmem = list(message.server.members)[(random.randrange(0, len(message.server.members)))]
 			send = message.author.mention + ' slapped '
-			if '@everyone' in arg or '@here' in arg:
+			if not arg:
+				send = send + randmem.name
+			elif '@everyone' in arg or '@here' in arg:
 				send = message.author.mention + ", you can't slap *everyone,* dumbass"
 			elif client.user in message.mentions:
 				send = message.author.mention + ", don't you dare slap me"
