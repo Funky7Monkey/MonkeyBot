@@ -207,6 +207,8 @@ async def on_message(message):
 				send = message.author.mention + ", you can't slap *everyone,* dumbass"
 			elif client.user in message.mentions:
 				send = message.author.mention + ", don't you dare slap me"
+			elif message.author in message.mentions:
+				send = message.author.mention + ", have fun hurting yourself, you dirty masochist."
 			elif len(message.mentions) > 0:
 				for member in message.mentions:
 					send = send + member.mention + ' and '
