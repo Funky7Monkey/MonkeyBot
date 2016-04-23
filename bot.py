@@ -87,7 +87,7 @@ async def spam(ch):
 	global sp
 	sp = True
 	while sp == True:
-		await client.send_message(client.get_channel(sp.c)
+		await client.send_message(client.get_channel(sp.c), 'vibrating for sex')
 		await asyncio.sleep(1)
 
 @client.event
