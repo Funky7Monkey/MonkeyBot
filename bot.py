@@ -83,6 +83,12 @@ async def music_queue():
 				Skip.started = datetime.datetime.now()
 		await asyncio.sleep(1)
 
+async def spam(ch):
+	sp == True
+	while sp == True:
+		await client.send_message(client.get_channel(sp.c)
+		await asyncio.sleep(1)
+
 @client.event
 async def on_ready():
 	await client.edit_profile(password, username = botname)
@@ -230,6 +236,12 @@ async def on_message(message):
 					sent = await client.edit_message(sent, sent.content + arg[i+1])
 					if command == 'e':
 						await asyncio.sleep(1)
+		elif command == 'vibrator':
+			if message.channel.is_private == False:
+				return
+			spam(str(message.channel))
+		elif command == 'endvib':
+			spam.a = False
 
 #		--------------
 #		---MusicBot---
