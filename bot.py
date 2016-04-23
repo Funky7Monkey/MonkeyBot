@@ -84,7 +84,8 @@ async def music_queue():
 		await asyncio.sleep(1)
 
 async def spam(ch):
-	sp == True
+	global sp
+	sp = True
 	while sp == True:
 		await client.send_message(client.get_channel(sp.c)
 		await asyncio.sleep(1)
@@ -239,9 +240,11 @@ async def on_message(message):
 		elif command == 'vibrator':
 			if message.channel.is_private == False:
 				return
-			spam(str(message.channel))
+			global sp
+			sp = True
+			loop.create_task(spam(str(message.channel)))
 		elif command == 'endvib':
-			spam.a = False
+			sp = False
 
 #		--------------
 #		---MusicBot---
