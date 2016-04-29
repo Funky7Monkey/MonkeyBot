@@ -2,7 +2,7 @@ import sys
 import re
 import random
 import discord
-from settings import email,password,botname,owner,Allowed_Channels,Allowed_Channels_MB,prefix,voice_channel,opusloc
+from settings import token,botname,owner,Allowed_Channels,Allowed_Channels_MB,prefix,voice_channel,opusloc
 import datetime
 import time
 import asyncio
@@ -92,7 +92,7 @@ async def spam(ch):
 
 @client.event
 async def on_ready():
-	await client.edit_profile(password, username = botname)
+	await client.edit_profile(username = botname)
 	print(str(datetime.datetime.now()) + '\nLogged in as ' + client.user.name + '\nUser ID: ' + client.user.id + '\n------')
 	discord.opus.load_opus(opusloc)
 	global voice
@@ -410,7 +410,7 @@ async def on_member_unban(server, user):
 	await client.send_message(server.default_channel, '{} got unhammered'.format(user.name))
 
 try:
-	client.run(email,password)
+	client.run(token)
 except discord.errors.ClientException as e:
 	print(str(datetime.datetime.now()) + ': ClientException')
 	print(e)
