@@ -202,9 +202,9 @@ async def on_message(message):
 		elif command == 'nickname':
 			if int(message.author.id) in owner or message.author.id == client.user.id:
 				if not arg:
-					await client.change_nickname(client.get_member(client.user.id), None)
+					await client.change_nickname(message.server.get_member(client.user.id), None)
 				else:
-					await client.change_nickname(client.get_member(client.user.id), arg)
+					await client.change_nickname(message.server.get_member(client.user.id), arg)
 		elif command == 'slap':
 			global slap
 			try:
