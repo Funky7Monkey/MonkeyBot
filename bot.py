@@ -199,6 +199,12 @@ async def on_message(message):
 			else:
 				await client.change_status(game = discord.Game(name = arg))
 				print(str(datetime.datetime.now()) + ': ' + message.author.name + ' set status to {}'.format(arg))
+		elif command == 'nickname':
+			if int(message.author.id) in owner or message.author.id == client.user.id:
+				if not arg:
+					await client.change_nickname(client.user, None)
+				else:
+					await client.change_nickname(client.user, arg)
 		elif command == 'slap':
 			global slap
 			try:
