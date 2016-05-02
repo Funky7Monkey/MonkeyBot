@@ -40,7 +40,7 @@ async def on_message(message):
 		n = message.content.count('(╯°□°）╯︵ ┻━┻')
 		send = ''
 		for i in range(n):
-			send += '\n┬─┬﻿ ノ( ゜-゜ノ)'
+			send += '┬─┬﻿ ノ( ゜-゜ノ)\n'
 		await client.send_message(message.channel, send)
 	if message.channel.is_private == False:
 		if int(message.channel.id) not in Allowed_Channels or not message.content.startswith(prefix):
