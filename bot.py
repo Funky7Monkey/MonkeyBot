@@ -1,15 +1,8 @@
-import sys
-import re
 import random
 import discord
 from settings import token,botname,owner,Allowed_Channels,prefix
 import datetime
-import time
-import asyncio
-import youtube_dl
-import functools
 import json
-import importlib
 import logging
 import subprocess
 
@@ -20,7 +13,6 @@ handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(me
 log.addHandler(handler)
 
 client = discord.Client()
-loop = asyncio.get_event_loop()
 
 @client.event
 async def on_ready():
