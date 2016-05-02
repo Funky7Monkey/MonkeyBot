@@ -37,7 +37,11 @@ async def on_message(message):
 	if message.author == client.user:
 		return
 	if '(╯°□°）╯︵ ┻━┻' in message.content or '(╯°□°)╯︵ ┻━┻' in message.content:
-		await client.send_message(message.channel, '┬─┬﻿ ノ( ゜-゜ノ)')
+		n = message.content.count('(╯°□°）╯︵ ┻━┻')
+		send = ''
+		for i in range(n):
+			send += '\n┬─┬﻿ ノ( ゜-゜ノ)'
+		await client.send_message(message.channel, send)
 	if message.channel.is_private == False:
 		if int(message.channel.id) not in Allowed_Channels or not message.content.startswith(prefix):
 			return
