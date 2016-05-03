@@ -12,6 +12,17 @@ handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w'
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
 log.addHandler(handler)
 
+class default():
+	"""Default commands"""
+	class help(client, *arg):
+		"""Help dialog"""
+		await client.send_message(message.channel, '__**{0}**__\n`{1}playing` - Set the bot\'s status.\
+			\n`{1}slap` - Slap a random person or mentioned person(s).\
+			\nWhen calling commands in PM, do not use the prefix `{1}`'.format(botname, prefix))
+		
+	
+
+
 client = discord.Client()
 
 @client.event
@@ -23,6 +34,9 @@ async def on_ready():
 	for member in client.get_all_members():
 		if int(member.id) in owner and member not in owners:
 			owners.append(member)
+	for server in client.servers:
+		type('Commands', server, dict(prefix = '%'))
+		
 
 @client.event
 async def on_message(message):
