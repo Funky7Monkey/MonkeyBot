@@ -77,7 +77,7 @@ class builtin():
 				await client.send_message(message.channel, '{0} will now run in {1}.'.format(botname, message.channel.mention))
 			else:
 				for server in client.servers:
-					if message.server.get_channel(arg[0]):
+					if message.server.get_channel(arg[0]) != None:
 						channel = message.server.get_channel(arg[0])
 				message.server.allowed[channel.id] = channel.id
 				await client.send_message(message.channel, '{0} will now run in {1}.'.format(botname, channel.mention))
@@ -90,7 +90,7 @@ class builtin():
 				await client.send_message(message.channel, '{0} will no longer run in {1}.'.format(botname, message.channel.mention))
 			else:
 				for server in client.servers:
-					if message.server.get_channel(arg[0]):
+					if message.server.get_channel(arg[0]) != None:
 						channel = message.server.get_channel(arg[0])
 				del message.server.allowed[channel.id]
 				await client.send_message(message.channel, '{0} will no longer run in {1}.'.format(botname, channel.mention))
