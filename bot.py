@@ -1,6 +1,6 @@
 import random
 import discord
-from settings import token,botname,owner,Allowed_Channels,prefix
+from settings import token,botname,owner
 import datetime
 import json
 import logging
