@@ -5,6 +5,14 @@ import datetime
 import json
 import logging
 import subprocess
+import types
+import importlib
+import commands
+
+available = {}
+for command in dir(commands):
+	if not command.startswith('_'):
+		available[getattr(commands, command).__name__] = getattr(commands, command)
 
 log = logging.getLogger('discord')
 log.setLevel(logging.INFO)
@@ -12,18 +20,108 @@ handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w'
 handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
 log.addHandler(handler)
 
-class default():
-	"""Default commands"""
-	class help(client, *arg):
-		"""Help dialog"""
-		await client.send_message(message.channel, '__**{0}**__\n`{1}playing` - Set the bot\'s status.\
-			\n`{1}slap` - Slap a random person or mentioned person(s).\
-			\nWhen calling commands in PM, do not use the prefix `{1}`'.format(botname, prefix))
-		
-	
-
-
 client = discord.Client()
+discord.Server.comm = {}
+discord.Server.allowed = {}
+discord.Server.__slots__.append('comm')
+discord.Server.__slots__.append('allowed')
+
+class builtin():
+	"""Built-in commands"""
+	async def help(client, message, *arg):
+		"""Displays Help dialog"""
+		send = 'List of commands:'
+		for name, command in message.server.comm.items():
+			send += '\n\n`{1}' + name + '` - ' + command.__doc__
+		await client.send_message(message.channel, send.format(botname, message.server.allowed['prefix']))
+		
+	async def restart(client, message, *arg):
+		"""Restarts {0}"""
+		comm = {}
+		for server in client.servers:
+			comm[server.id] = list(server.comm.keys())
+		with open('comm.json', 'w') as c:
+			json.dump(comm, c)
+		allowed = {}
+		for server in client.servers:
+			allowed[server.id] = server.allowed
+		with open('allowed.json', 'w') as c:
+			json.dump(allowed, c)
+		await client.close()
+
+	async def update(client, message, *arg):
+		"""Updates {0}"""
+		if int(message.author.id) in owner or message.author.id == client.user.id:
+			update = ['sudo','git','pull']
+			up = subprocess.Popen(update,stdout=subprocess.PIPE,stderr=subprocess.PIPE,universal_newlines=True)
+			out, err = up.communicate()
+			up.wait()
+			await client.send_message(message.channel, 'Update succeeded!')
+			for o in owners:
+				await client.send_message(o, 'Output:\n'+out+'\n'+err)
+
+	async def playing(client, message, *arg):
+		"""Sets {0}\'s status"""
+		if not arg[0]:
+			await client.change_status(game = discord.Game(name = None))
+			print(str(datetime.datetime.now()) + ': ' + message.author.name + ' set status to None')
+		else:
+			await client.change_status(game = discord.Game(name = arg[0]))
+			print(str(datetime.datetime.now()) + ': ' + message.author.name + ' set status to {}'.format(arg[0]))
+
+	async def allow(client, message, *arg):
+		"""Allows {0} to run in a channel\nUsable by server owner"""
+		if int(message.author.id) in owner or message.server.owner == message.author:
+			if not arg[0]:
+				message.server.allowed[message.channel.name] = message.channel.id
+				await client.send_message(message.channel, '{0} will now run in {1}.'.format(botname, message.channel.mention))
+			else:
+				channel = message.server.get_channel(int(arg[0]))
+				message.server.allowed[channel.name] = channel.id
+				await client.send_message(message.channel, '{0} will now run in {1}.'.format(botname, channel.mention))
+
+	async def disallow(client, message, *arg):
+		"""Disallows {0} to run in a channel\nUsable by server owner"""
+		if int(message.author.id) in owner or message.server.owner == message.author:
+			if not arg[0]:
+				del message.server.allowed[message.channel.name]
+				await client.send_message(message.channel, '{0} will no longer run in {1}.'.format(botname, message.channel.mention))
+			else:
+				channel = message.server.get_channel(int(arg[0]))
+				del message.server.allowed[channel.name]
+				await client.send_message(message.channel, '{0} will no longer run in {1}.'.format(botname, channel.mention))
+
+	async def module(client, message, *arg):
+		"""Works with commands"""
+		if int(message.author.id) in owner or message.author.id == client.user.id:
+			if not arg[0]:
+				imported = ''
+				for name, command in message.server.comm.items():
+					imported += '\n**' + name + '** - ' + command.__doc__
+				av = ''
+				for name, command in available.items():
+					av += '\n**' + name + '** - ' + command.__doc__
+				await client.send_message(message.channel, '__**Imported Commands:**__' + imported.format(botname) + '\n\n__**Available Commands:**__' + av.format(botname))
+			elif arg[0].startswith('import'):
+				args = arg[0].split(' ')
+				if args[1].lower() in message.server.comm:
+					await client.send_message(message.channel, 'The command `' + args[1].lower() + '` has already been imported.')
+				elif args[1].lower() in available:
+					message.server.comm[args[1].lower()] = available[args[1].lower()]
+					await client.send_message(message.channel, 'Imported:\n**' + args[1].lower() + '** - ' + message.server.comm[args[1].lower()].__doc__)
+				else:
+					await client.send_message(message.channel, 'The command `' + args[1].lower() + '` is not available.')
+			elif arg[0].startswith('export'):
+				args = arg[0].split(' ')
+				if args[1].lower() in message.server.comm and args[1].lower() in available:
+					del message.server.comm[args[1].lower()]
+					await client.send_message(message.channel, 'Removed:\n**' + args[1].lower() + '** - ' + available[args[1].lower()].__doc__)
+			elif arg[0].startswith('reload'):
+				importlib.reload(commands)
+				available.clear()
+				for command in dir(commands):
+					if not command.startswith('_'):
+						available[getattr(commands, command).__name__] = getattr(commands, command)
 
 @client.event
 async def on_ready():
@@ -34,124 +132,40 @@ async def on_ready():
 	for member in client.get_all_members():
 		if int(member.id) in owner and member not in owners:
 			owners.append(member)
+	with open('comm.json', 'r') as c:
+		comm = json.loads(c.read())
+	with open('allowed.json', 'r') as c:
+		al = json.loads(c.read())
 	for server in client.servers:
-		type('Commands', server, dict(prefix = '%'))
-		
+		for i in al[server.id]:
+			server.allowed[i] = al[server.id][i]
+		for command in dir(builtin):
+			if not command.startswith('_'):
+				server.comm[getattr(builtin, command).__name__] = getattr(builtin, command)
+		for name in comm[server.id]:
+			if not name in server.comm:
+				server.comm[name] = available[name]
 
 @client.event
 async def on_message(message):
-	if message.author == client.user:
+	if message.author == client.user or not message.content.startswith(message.server.allowed['prefix']):
 		return
-	if '(╯°□°）╯︵ ┻━┻' in message.content or '(╯°□°)╯︵ ┻━┻' in message.content:
-		n = message.content.count('(╯°□°）╯︵ ┻━┻')
-		send = ''
-		for i in range(n):
-			send += '┬─┬﻿ ノ( ゜-゜ノ)\n'
-		await client.send_message(message.channel, send)
-	if message.channel.is_private == False:
-		if int(message.channel.id) not in Allowed_Channels or not message.content.startswith(prefix):
-			return
-		message.content = message.content[1:]
-		for role in message.author.roles:
-			if role.name == 'Bot':
-				return
+	if len(message.server.allowed) > 1 and message.channel.id not in message.server.allowed.values():
+		return
 	try:
-		print(str(datetime.datetime.now()) + ': received')
 		try:
 			command, arg = message.content.split(' ', maxsplit = 1)
-			command = command.lower()
+			command = command.lower()[1:]
 		except(ValueError):
-			command = message.content
+			command = message.content[1:]
 			arg = None
-		log.info('Received command: "{}" with argument: "{}" from "{}"'.format(command, arg, message.author.name))
+		print(str(datetime.datetime.now()) + ': Received command: "{}" with argument(s): "{}" from "{}"'.format(command, arg, message.author.name))
+		log.info('Received command: "{}" with argument(s): "{}" from "{}"'.format(command, arg, message.author.name))
 
-		if command == 'help':
-			if not arg:
-				await client.send_message(message.channel, '__**{0}**__\n`{1}playing` - Set the bot\'s status.\
-					\n`{1}slap` - Slap a random person or mentioned person(s).\
-					\nWhen calling commands in PM, do not use the prefix `{1}`'.format(botname, prefix))
-		elif command == 'restart' or command == 'kill':
-			if int(message.author.id) in owner or message.author.id == client.user.id:
-				if command == 'kill':
-					subprocess.Popen(['sudo','killall','-15','python3.5'])
-				await client.close()
-		elif command == 'update':
-			if int(message.author.id) in owner or message.author.id == client.user.id:
-				update = ['sudo','git','pull']
-				up = subprocess.Popen(update,stdout=subprocess.PIPE,stderr=subprocess.PIPE,universal_newlines=True)
-				out, err = up.communicate()
-				up.wait()
-				await client.send_message(message.channel, 'Update succeeded!')
-				for o in owners:
-					await client.send_message(o, 'Output:\n'+out+'\n'+err)
-		elif command == 'clean':
-			if int(message.author.id) in owner or message.author.id == client.user.id:
-				own = []
-				for mes in client.messages:
-					if mes.author == client.user and mes.channel == message.channel:
-						own.append(mes)
-				own.reverse()
-				for i in range(int(arg)):
-					await client.delete_message(own[i])
-		elif command == 'add':
-			try:
-				sub, arg = arg.split(' ', maxsplit = 1)
-				sub = sub.lower()
-			except(ValueError):
-				await client.send_message(message.channel, 'Need Arguments')
-			if sub == 'compensation':
-				with open('comp.json', 'r') as c:
-					comp = json.loads(c.read())
-				comp.append(arg)
-				with open('comp.json', 'w') as c:
-					json.dump(comp, c)
-				await client.send_message(message.channel, 'Added `{}`'.format(arg))
-		elif command == 'playing':
-			if not arg:
-				await client.change_status(game = discord.Game(name = None))
-				print(str(datetime.datetime.now()) + ': ' + message.author.name + ' set status to None')
-			else:
-				await client.change_status(game = discord.Game(name = arg))
-				print(str(datetime.datetime.now()) + ': ' + message.author.name + ' set status to {}'.format(arg))
-		elif command == 'nickname':
-			if int(message.author.id) in owner or message.author.id == client.user.id:
-				if not arg:
-					await client.change_nickname(message.server.get_member(client.user.id), None)
-				else:
-					await client.change_nickname(message.server.get_member(client.user.id), arg)
-		elif command == 'slap':
-			global slap
-			try:
-				if int((datetime.datetime.now() - slap).total_seconds()) < 2:
-					return
-			except NameError:
-				pass
-			randmem = list(message.server.members)[(random.randrange(0, len(message.server.members)))]
-			send = message.author.mention + ' slapped '
-			if not arg:
-				send = send + randmem.name
-			elif '@everyone' in arg or '@here' in arg:
-				send = message.author.mention + ", you can't slap *everyone,* dumbass"
-			elif client.user in message.mentions:
-				send = message.author.mention + ", don't you dare slap me"
-			elif message.author in message.mentions:
-				send = message.author.mention + ", have fun hurting yourself, you dirty masochist"
-			elif len(message.mentions) > 0:
-				for member in message.mentions:
-					send = send + member.mention + ' and '
-				send = send[:-5]
-			else:
-				send = send + randmem.name
-			await client.send_message(message.channel, send + '!')
-			slap = datetime.datetime.now()
-		elif command == 'milkshake':
-			await client.send_message(message.channel, 'https://www.youtube.com/watch?v=pGL2rytTraA')
-		elif command == 'compensation':
-			with open('comp.json', 'r') as c:
-				comp = json.loads(c.read())
-			await client.send_message(message.channel, random.choice(comp))
+		if command in message.server.comm:
+			await message.server.comm[command](client, message, arg)
 		else:
-			print(str(datetime.datetime.now()) + ': **Error:** Not a valid command')
+			print('Command not found')
 
 	except Exception as e:
 		import traceback
@@ -164,7 +178,14 @@ async def on_message(message):
 
 try:
 	client.run(token)
-except discord.errors.ClientException as e:
-	print(str(datetime.datetime.now()) + ': ClientException')
-	print(e)
-	pass
+except Exception as e:
+	comm = {}
+	for server in client.servers:
+		comm[server.id] = list(server.comm.keys())
+	with open('comm.json', 'w') as c:
+		json.dump(comm, c)
+	allowed = {}
+	for server in client.servers:
+		allowed[server.id] = server.allowed
+	with open('allowed.json', 'w') as c:
+		json.dump(allowed, c)
