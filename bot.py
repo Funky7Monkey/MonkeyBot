@@ -73,22 +73,26 @@ class builtin():
 		"""Allows {0} to run in a channel\nUsable by server owner"""
 		if int(message.author.id) in owner or message.server.owner == message.author:
 			if not arg[0]:
-				message.server.allowed[message.channel.name] = message.channel.id
+				message.server.allowed[message.channel.id] = message.channel.id
 				await client.send_message(message.channel, '{0} will now run in {1}.'.format(botname, message.channel.mention))
 			else:
-				channel = message.server.get_channel(int(arg[0]))
-				message.server.allowed[channel.name] = channel.id
+				for server in client.servers:
+					if message.server.get_channel(arg[0]):
+						channel = message.server.get_channel(arg[0])
+				message.server.allowed[channel.id] = channel.id
 				await client.send_message(message.channel, '{0} will now run in {1}.'.format(botname, channel.mention))
 
 	async def disallow(client, message, *arg):
 		"""Disallows {0} to run in a channel\nUsable by server owner"""
 		if int(message.author.id) in owner or message.server.owner == message.author:
 			if not arg[0]:
-				del message.server.allowed[message.channel.name]
+				del message.server.allowed[message.channel.id]
 				await client.send_message(message.channel, '{0} will no longer run in {1}.'.format(botname, message.channel.mention))
 			else:
-				channel = message.server.get_channel(int(arg[0]))
-				del message.server.allowed[channel.name]
+				for server in client.servers:
+					if message.server.get_channel(arg[0]):
+						channel = message.server.get_channel(arg[0])
+				del message.server.allowed[channel.id]
 				await client.send_message(message.channel, '{0} will no longer run in {1}.'.format(botname, channel.mention))
 
 	async def module(client, message, *arg):
@@ -150,7 +154,7 @@ async def on_ready():
 async def on_message(message):
 	if message.author == client.user or not message.content.startswith(message.server.allowed['prefix']):
 		return
-	if len(message.server.allowed) > 1 and message.channel.id not in message.server.allowed.values():
+	if len(message.server.allowed) > 1 and message.channel.id not in message.server.allowed:
 		return
 	try:
 		try:
