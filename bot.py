@@ -30,7 +30,7 @@ class builtin():
 	"""Built-in commands"""
 	async def help(client, message, *arg):
 		"""Displays Help dialog"""
-		if not arg[0] or arg[0].lower() in message.server.comm:
+		if arg[0] and arg[0].lower() in message.server.comm:
 			if hasattr(message.server.comm[arg[0].lower()], '__help__'):
 				send = '**Help for `{1}' + arg[0].lower() + '`**\n' + message.server.comm[arg[0].lower()].__help__
 			else:
