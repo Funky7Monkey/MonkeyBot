@@ -38,4 +38,5 @@ async def nickname(client, message, *arg):
 					await client.change_nickname(message.server.get_member(client.user.id), arg)
 async def vote(client, message, *arg):
 	"""Vote on or run polls *Currently does nothing*"""
+	__help__ = "Test inner help"
 	pass
