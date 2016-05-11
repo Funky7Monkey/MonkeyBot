@@ -1,6 +1,6 @@
 import random
 import discord
-from settings import token,botname,owner
+from settings import token,botname,owner,prefix
 import datetime
 import json
 import logging
@@ -39,7 +39,7 @@ class builtin():
 			send = 'List of commands:'
 			for name, command in message.server.comm.items():
 				send += '\n\n`{1}' + name + '` - ' + command.__doc__
-		await client.send_message(message.channel, send.format(botname, message.server.allowed['prefix']))
+		await client.send_message(message.channel, send.format(botname, prefix))
 		
 	async def restart(client, message, *arg):
 		"""Restarts {0}"""
@@ -161,7 +161,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-	if message.author == client.user or not message.content.startswith(message.server.allowed['prefix']):
+	if message.author == client.user or not message.content.startswith(prefix):
 		return
 	if len(message.server.allowed) > 1 and message.channel.id not in message.server.allowed:
 		return
