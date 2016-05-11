@@ -30,9 +30,15 @@ class builtin():
 	"""Built-in commands"""
 	async def help(client, message, *arg):
 		"""Displays Help dialog"""
-		send = 'List of commands:'
-		for name, command in message.server.comm.items():
-			send += '\n\n`{1}' + name + '` - ' + command.__doc__
+		if arg[0].lower() in message.server.comm:
+			if hasattr(message.server.comm[arg[0].lower()], __help__):
+				send = '**Help for `{1}' + arg[0].lower() + '`**\n' + message.server.comm[arg[0].lower()].__help__
+			else:
+				send = '**Help for `{1}' + arg[0].lower() + '`**\n' + message.server.comm[arg[0].lower()].__doc__
+		else:
+			send = 'List of commands:'
+			for name, command in message.server.comm.items():
+				send += '\n\n`{1}' + name + '` - ' + command.__doc__
 		await client.send_message(message.channel, send.format(botname, message.server.allowed['prefix']))
 		
 	async def restart(client, message, *arg):
@@ -70,7 +76,7 @@ class builtin():
 			print(str(datetime.datetime.now()) + ': ' + message.author.name + ' set status to {}'.format(arg[0]))
 
 	async def allow(client, message, *arg):
-		"""Allows {0} to run in a channel\nUsable by server owner"""
+		"""Allows {0} to run in a channel"""
 		if int(message.author.id) in owner or message.server.owner == message.author:
 			if not arg[0]:
 				message.server.allowed[message.channel.id] = message.channel.id
@@ -83,7 +89,7 @@ class builtin():
 				await client.send_message(message.channel, '{0} will now run in {1}.'.format(botname, channel.mention))
 
 	async def disallow(client, message, *arg):
-		"""Disallows {0} to run in a channel\nUsable by server owner"""
+		"""Disallows {0} to run in a channel"""
 		if int(message.author.id) in owner or message.server.owner == message.author:
 			if not arg[0]:
 				del message.server.allowed[message.channel.id]
@@ -125,7 +131,10 @@ class builtin():
 				available.clear()
 				for command in dir(commands):
 					if not command.startswith('_'):
-						available[getattr(commands, command).__name__] = getattr(commands, command)
+						try:
+							available[getattr(commands, command).__name__] = getattr(commands, command)
+						except AttributeError:
+							pass
 
 @client.event
 async def on_ready():
