@@ -164,8 +164,8 @@ async def on_ready():
 async def on_message(message):
 	if message.author == client.user or not message.content.startswith(prefix):
 		return
-	if len(message.server.allowed) > 0 and int(message.channel.id) not in message.server.allowed:
-		return
+#	if len(message.server.allowed) > 0 and int(message.channel.id) not in message.server.allowed:
+#		return
 	try:
 		try:
 			command, arg = message.content.split(' ', maxsplit = 1)
