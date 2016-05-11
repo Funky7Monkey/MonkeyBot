@@ -1,6 +1,6 @@
 import random
 import discord
-from settings import token,botname,owner,prefix
+from settings import token,botname,owner
 import datetime
 import json
 import logging
@@ -21,6 +21,7 @@ handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(me
 log.addHandler(handler)
 
 client = discord.Client()
+prefix = '%'
 discord.Server.comm = {}
 discord.Server.allowed = {}
 discord.Server.__slots__.append('comm')
