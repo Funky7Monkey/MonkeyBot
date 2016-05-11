@@ -31,7 +31,7 @@ class builtin():
 	async def help(client, message, *arg):
 		"""Displays Help dialog"""
 		if arg[0].lower() in message.server.comm:
-			if hasattr(message.server.comm[arg[0].lower()], __help__):
+			if hasattr(message.server.comm[arg[0].lower()], '__help__'):
 				send = '**Help for `{1}' + arg[0].lower() + '`**\n' + message.server.comm[arg[0].lower()].__help__
 			else:
 				send = '**Help for `{1}' + arg[0].lower() + '`**\n' + message.server.comm[arg[0].lower()].__doc__
