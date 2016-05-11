@@ -80,26 +80,26 @@ class builtin():
 		"""Allows {0} to run in a channel"""
 		if int(message.author.id) in owner or message.server.owner == message.author:
 			if not arg[0]:
-				message.server.allowed[message.channel.id] = message.channel.id
+				message.server.allowed[int(message.channel.id)] = int(message.channel.id)
 				await client.send_message(message.channel, '{0} will now run in {1}.'.format(botname, message.channel.mention))
 			else:
 				for server in client.servers:
 					if message.server.get_channel(arg[0]) != None:
 						channel = message.server.get_channel(arg[0])
-				message.server.allowed[channel.id] = channel.id
+				message.server.allowed[int(channel.id)] = int(channel.id)
 				await client.send_message(message.channel, '{0} will now run in {1}.'.format(botname, channel.mention))
 
 	async def disallow(client, message, *arg):
 		"""Disallows {0} to run in a channel"""
 		if int(message.author.id) in owner or message.server.owner == message.author:
 			if not arg[0]:
-				del message.server.allowed[message.channel.id]
+				del message.server.allowed[int(message.channel.id)]
 				await client.send_message(message.channel, '{0} will no longer run in {1}.'.format(botname, message.channel.mention))
 			else:
 				for server in client.servers:
 					if message.server.get_channel(arg[0]) != None:
 						channel = message.server.get_channel(arg[0])
-				del message.server.allowed[channel.id]
+				del message.server.allowed[int(channel.id)]
 				await client.send_message(message.channel, '{0} will no longer run in {1}.'.format(botname, channel.mention))
 
 	async def module(client, message, *arg):
@@ -164,7 +164,7 @@ async def on_ready():
 async def on_message(message):
 	if message.author == client.user or not message.content.startswith(prefix):
 		return
-	if len(message.server.allowed) > 1 and message.channel.id not in message.server.allowed:
+	if len(message.server.allowed) > 0 and int(message.channel.id) not in message.server.allowed:
 		return
 	try:
 		try:
